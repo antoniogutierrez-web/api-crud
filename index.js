@@ -1,42 +1,66 @@
 // index.js
 
-// 1. Importar las librerías necesarias
+const swaggerJsdoc = require('swagger-jsdoc');
+const swaggerUi = require('swagger-ui-express');
 const { MongoClient, ObjectId } = require("mongodb");
-
 const express = require("express");
+const cors = require('cors');
 
-// 2. Crear la aplicación Express y configurar middleware para JSON
+// Crear la aplicación Express y configurar middleware
 const app = express();
 app.use(express.json());
+app.use(cors());
 
-// 3. Configurar la conexión a MongoDB con los mismos parámetros que funcionaban
+// Configurar la conexión a MongoDB
 const username = encodeURIComponent("antonio2");
 const password = encodeURIComponent("NuLe7AKaxdbTHwlD");
 const cluster = "cluster01.xhorz.mongodb.net";
 const authSource = "admin";
 const authMechanism = "SCRAM-SHA-1";
+const uri = `mongodb+srv://${username}:${password}@${cluster}/?authSource=${authSource}&authMechanism=${authMechanism}`;
 
-let uri = `mongodb+srv://${username}:${password}@${cluster}/?authSource=${authSource}&authMechanism=${authMechanism}`;
-
-// 4. Crear una instancia del cliente de MongoDB
 const client = new MongoClient(uri);
-
-// 5. Declarar una variable global para la base de datos
 let db;
 
-// 6. Función para conectar a MongoDB (sin cerrar la conexión)
+// Función para conectar a MongoDB
 async function connectDB() {
   try {
     await client.connect();
     console.log("✅ Conexión exitosa a MongoDB!");
-    // Usa la misma base de datos que en tu código anterior
     db = client.db("sample_mflix");
   } catch (error) {
     console.error("❌ Error de conexión:", error);
   }
 }
 
-// 7. Endpoint GET para obtener todos los comentarios
+// Endpoints CRUD con documentación Swagger
+/**
+ * @swagger
+ * /api/comments:
+ *   get:
+ *     summary: Obtiene todos los comentarios
+ *     responses:
+ *       200:
+ *         description: Lista de comentarios
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   _id:
+ *                     type: string
+ *                   name:
+ *                     type: string
+ *                   email:
+ *                     type: string
+ *                   text:
+ *                     type: string
+ *                   date:
+ *                     type: string
+ *                     format: date-time
+ */
 app.get("/api/comments", async (req, res) => {
   try {
     const collection = db.collection("comments");
@@ -48,11 +72,44 @@ app.get("/api/comments", async (req, res) => {
   }
 });
 
-// 8. Endpoint POST para agregar un nuevo comentario
+/**
+ * @swagger
+ * /api/comments:
+ *   post:
+ *     summary: Agrega un nuevo comentario
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - name
+ *               - email
+ *               - text
+ *             properties:
+ *               name:
+ *                 type: string
+ *               email:
+ *                 type: string
+ *               text:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Comentario agregado correctamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 id:
+ *                   type: string
+ */
 app.post("/api/comments", async (req, res) => {
   try {
     const newComment = req.body;
-    // Validar campos mínimos
     if (!newComment || !newComment.name || !newComment.email || !newComment.text) {
       return res.status(400).json({ error: "Faltan campos requeridos (name, email, text)" });
     }
@@ -64,24 +121,53 @@ app.post("/api/comments", async (req, res) => {
   }
 });
 
-
-// Endpoint PUT para actualizar un comentario
+/**
+ * @swagger
+ * /api/comments/{id}:
+ *   put:
+ *     summary: Actualiza un comentario existente
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: ID del comentario a actualizar
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *               email:
+ *                 type: string
+ *               text:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Comentario actualizado correctamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ */
 app.put('/api/comments/:id', async (req, res) => {
   try {
-    const id = req.params.id; // Obtenemos el id del parámetro de la URL
-    const updatedData = req.body; // Obtenemos los datos actualizados del cuerpo de la petición
-    
-    // Intentamos actualizar el documento que coincida con el _id
+    const id = req.params.id;
+    const updatedData = req.body;
     const result = await db.collection("comments").updateOne(
       { _id: new ObjectId(id) },
       { $set: updatedData }
     );
-    
     if (result.matchedCount === 0) {
-      // Si no se encontró ningún comentario con ese id, enviamos un error 404
       return res.status(404).json({ error: "Comentario no encontrado" });
     }
-    
     res.json({ message: "Comentario actualizado" });
   } catch (error) {
     console.error("Error al actualizar comentario:", error);
@@ -89,19 +175,36 @@ app.put('/api/comments/:id', async (req, res) => {
   }
 });
 
-
-// Endpoint DELETE para eliminar un comentario
+/**
+ * @swagger
+ * /api/comments/{id}:
+ *   delete:
+ *     summary: Elimina un comentario existente
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: ID del comentario a eliminar
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Comentario eliminado correctamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ */
 app.delete('/api/comments/:id', async (req, res) => {
   try {
     const id = req.params.id;
-    // Intentamos eliminar el documento que coincida con el _id
     const result = await db.collection("comments").deleteOne({ _id: new ObjectId(id) });
-    
     if (result.deletedCount === 0) {
-      // Si no se encontró el comentario, enviamos un error 404
       return res.status(404).json({ error: "Comentario no encontrado" });
     }
-    
     res.json({ message: "Comentario eliminado" });
   } catch (error) {
     console.error("Error al eliminar comentario:", error);
@@ -109,13 +212,35 @@ app.delete('/api/comments/:id', async (req, res) => {
   }
 });
 
+// Endpoint raíz
 app.get("/", (req, res) => {
   res.send("¡Servidor Express funcionando y conectado a MongoDB!");
 });
 
-// 9. Iniciar el servidor y la conexión a MongoDB
+// Configuración Swagger
+const options = {
+  definition: {
+    openapi: '3.0.0',
+    info: {
+      title: 'API CRUD de Comentarios',
+      version: '1.0.0',
+      description: 'Documentación de la API para manejar comentarios usando Express y MongoDB'
+    },
+    servers: [
+      {
+        url: process.env.PORT ? `http://localhost:${process.env.PORT}` : 'http://localhost:3000',
+      },
+    ],
+  },
+  apis: ['./index.js'],
+};
+
+const swaggerSpec = swaggerJsdoc(options);
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
+// Iniciar servidor
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, async () => {
-  await connectDB(); // Conectar a MongoDB cuando arranca el servidor
+  await connectDB();
   console.log(`Servidor corriendo en puerto ${PORT}`);
 });
