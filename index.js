@@ -244,3 +244,30 @@ app.listen(PORT, async () => {
   await connectDB();
   console.log(`Servidor corriendo en puerto ${PORT}`);
 });
+
+
+/**
+ * @swagger
+ * /api/comments:
+ *   delete:
+ *     summary: Elimina todos los comentarios
+ *     responses:
+ *       200:
+ *         description: Todos los comentarios fueron eliminados correctamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ */
+app.delete("/api/comments", async (req, res) => {
+  try {
+    const result = await db.collection("comments").deleteMany({});
+    res.json({ message: `Se eliminaron ${result.deletedCount} comentarios.` });
+  } catch (error) {
+    console.error("Error al eliminar comentarios:", error);
+    res.status(500).json({ error: "Error al eliminar comentarios" });
+  }
+});

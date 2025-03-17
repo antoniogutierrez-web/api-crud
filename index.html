@@ -222,6 +222,10 @@ us estilos CSS */
 </head>
 <body>
   <h1>Demo API CRUD de Comentarios</h1>
+  <button id="deleteAllBtn" style="background: red; color: #fff; padding: 10px; border: none; border-radius: 4px; cursor: pointer;">
+    Eliminar TODOS los comentarios
+  </button>
+  
   <div id="comments">
     <!-- Aquí se mostrarán los comentarios -->
   </div>
@@ -259,6 +263,22 @@ us estilos CSS */
         console.error("Error al obtener comentarios:", error);
       }
     }
+    async function deleteAllComments() {
+  if (confirm("¿Estás seguro de que deseas eliminar TODOS los comentarios? Esta acción no se puede deshacer.")) {
+    try {
+      const res = await fetch(API_URL, {
+        method: "DELETE"
+      });
+      const data = await res.json();
+      alert(data.message);
+      fetchComments(); // Actualiza la lista de comentarios
+    } catch (error) {
+      console.error("Error al eliminar todos los comentarios:", error);
+      alert("Hubo un error al eliminar todos los comentarios.");
+    }
+  }
+}
+document.getElementById("deleteAllBtn").addEventListener("click", deleteAllComments);
 
     // Manejar el envío del formulario para agregar un nuevo comentario
     document.getElementById("commentForm").addEventListener("submit", async (e) => {
