@@ -3,232 +3,272 @@
 <head>
   <meta charset="UTF-8">
   <title>Demo API CRUD de Comentarios</title>
-  <style>@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+  <style>
 
-    :root {
-      --primary-color: #8b626c;        /* Magenta vibrante */
-      --primary-dark: #611608;         /* Naranja/magenta oscuro */
-      --secondary-color: #00c6ff;      /* Cyan brillante */
-      --accent-color: #f7c331;         /* Amarillo vibrante */
-      --glass-bg: rgba(255, 255, 255, 0.25);
-      --border-color: rgba(255, 255, 255, 0.35);
-      --shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-      --blur: 10px;
-      --transition: 0.4s ease;
-      --text-color: #fff;
-      --background: linear-gradient(135deg, #ff416c, #ff4b2b, #00c6ff, #0072ff, #a800ff);
-    }
+
+/* Variables CSS para mantener consistencia en colores y estilos */
+:root {
+  --primary-color: #0071e3;
+  --accent-color: #00a8e8;
+  --danger-color: #ff3b30;
+  --danger-hover: #ff1a1a;
+  --background-color: #f5f5f7;
+  --card-background: #ffffff;
+  --text-color: #1d1d1f;
+  --subtext-color: #86868b;
+  --border-color: rgba(0,0,0,0.03);
+  --shadow-light: 0 2px 8px rgba(0,0,0,0.05);
+  --shadow-medium: 0 4px 16px rgba(0,0,0,0.1);
+  --transition-speed: 0.3s;
+  --easing: cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+/* Reset y estilos base */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+body {
+  background-color: var(--background-color);
+  color: var(--text-color);
+  line-height: 1.6;
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  min-height: 100vh;
+  position: relative;
+  z-index: 1;
+}
+
+/* Fondo decorativo sutil */
+body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at center, rgba(0,113,227,0.03) 0%, transparent 80%);
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* Encabezados */
+h1, h2 {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  font-weight: 600;
+}
+
+h1 {
+  font-size: 2.5rem;
+}
+
+h2 {
+  font-size: 1.8rem;
+  margin-top: 2rem;
+}
+
+/* Botón "Eliminar Todos" */
+button {
+  cursor: pointer;
+  transition: transform var(--transition-speed) var(--easing), box-shadow var(--transition-speed) var(--easing);
+  border: none;
+  border-radius: 8px;
+  padding: 0.8rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+#deleteAllBtn {
+  background: var(--danger-color);
+  color: #fff;
+  margin-bottom: 2rem;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+#deleteAllBtn:hover {
+  background: var(--danger-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255,59,48,0.2);
+}
+
+/* Sección de Comentarios */
+#comments {
+  display: grid;
+  gap: 1.5rem;
+  margin-bottom: 3rem;
+}
+
+.comment {
+  background: var(--card-background);
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: var(--shadow-light);
+  transition: transform var(--transition-speed) var(--easing), box-shadow var(--transition-speed) var(--easing);
+  border: 1px solid var(--border-color);
+  animation: fadeIn 0.5s ease-out;
+}
+
+.comment:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-medium);
+  background-color: #fbfbfd;
+}
+
+.comment strong {
+  color: var(--text-color);
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.comment em {
+  color: var(--subtext-color);
+  font-size: 0.9rem;
+  display: block;
+  margin-top: 0.8rem;
+}
+
+.comment-text {
+  color: var(--text-color);
+  line-height: 1.7;
+  margin: 0.8rem 0;
+}
+
+/* Detalle decorativo en bloques de comentario */
+.comment div {
+  border-left: 3px solid var(--primary-color);
+  padding-left: 1rem;
+}
+
+/* Formulario de Comentarios */
+#commentForm {
+  background: var(--card-background);
+  padding: 2rem;
+  border-radius: 18px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  max-width: 600px;
+  margin: 0 auto;
+  position: relative;
+  overflow: hidden;
+}
+
+#commentForm::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: linear-gradient(90deg, var(--primary-color) 0%, var(--accent-color) 100%);
+}
+
+#commentForm label {
+  color: var(--text-color);
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+#commentForm input,
+#commentForm textarea {
+  width: 100%;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border: 1px solid #d2d2d7;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: border-color var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+}
+
+#commentForm input:focus,
+#commentForm textarea:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 4px rgba(0,113,227,0.1);
+}
+
+#commentForm textarea {
+  height: 120px;
+  resize: vertical;
+}
+
+#commentForm button[type="submit"] {
+  background: var(--primary-color);
+  color: #fff;
+  width: 100%;
+}
+
+#commentForm button[type="submit"]:hover {
+  background: #0077ED;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0,113,227,0.2);
+}
+
+/* Animación para entrada suave */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  body {
+    padding: 1rem;
+  }
+  
+  h1 {
+    font-size: 2rem;
+  }
+  
+  h2 {
+    font-size: 1.5rem;
+  }
+  
+  #commentForm {
+    padding: 1.5rem;
+  }
+  
+  .comment {
+    padding: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  #deleteAllBtn {
+    width: 100%;
+    margin-bottom: 1.5rem;
+  }
+  
+  #commentForm input,
+  #commentForm textarea {
+    padding: 0.8rem;
+  }
+  
+  #commentForm button[type="submit"] {
+    padding: 0.8rem;
+  }
+}
+
+/* Reducir animaciones en caso de preferencia del usuario */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
+/* Clase utilitaria (por ejemplo, para ocultar elementos) */
+.u-hidden {
+  display: none !important;
+}
+
+
     
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    
-    html {
-      scroll-behavior: smooth;
-    }
-    
-    body {
-      font-family: 'Poppins', sans-serif;
-      background: var(--background);
-      background-size: 400% 400%;
-      animation: bgAnimation 20s ease infinite;
-      min-height: 100vh;
-      color: var(--text-color);
-      padding: 40px 20px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      position: relative;
-      overflow: auto;
-    }
-    
-    @keyframes bgAnimation {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
-    
-    /* Abstract Shapes */
-    body::before {
-      content: '';
-      position: absolute;
-      top: -10%;
-      left: -10%;
-      width: 120%;
-      height: 120%;
-      background: radial-gradient(circle, rgba(255,255,255,0.15), transparent 70%);
-      animation: floatShape 15s ease-in-out infinite;
-      z-index: -2;
-    }
-    
-    @keyframes floatShape {
-      0%, 100% { transform: translate(0, 0) rotate(0deg); }
-      50% { transform: translate(20px, -20px) rotate(180deg); }
-    }
-    
-    body::after {
-      content: '';
-      position: absolute;
-      bottom: -10%;
-      right: -10%;
-      width: 120%;
-      height: 120%;
-      background: radial-gradient(circle, rgba(0,198,255,0.15), transparent 70%);
-      animation: floatShape 20s ease-in-out infinite reverse;
-      z-index: -2;
-    }
-    
-    /* Headings */
-    h1, h2 {
-      text-align: center;
-      margin-bottom: 20px;
-      font-weight: 600;
-      color: var(--primary-color);
-      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-      animation: fadeInDown var(--transition) both;
-    }
-    
-    @keyframes fadeInDown {
-      from { opacity: 0; transform: translateY(-20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    
-    /* Botón de eliminar TODOS los comentarios */
-    #deleteAllBtn {
-      background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
-      color: var(--text-color);
-      padding: 14px 28px;
-      border: none;
-      border-radius: 30px;
-      cursor: pointer;
-      font-size: 16px;
-      font-weight: 600;
-      margin-bottom: 30px;
-      transition: transform var(--transition), box-shadow var(--transition);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-    }
-    
-    #deleteAllBtn:hover {
-      transform: scale(1.07);
-      box-shadow: 0 8px 24px rgba(0,0,0,0.3);
-    }
-    
-    /* Contenedor de comentarios */
-    #comments {
-      width: 100%;
-      max-width: 900px;
-      margin-bottom: 40px;
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-    }
-    
-    /* Tarjetas de comentario */
-    .comment {
-      background: var(--glass-bg);
-      border: 1px solid var(--border-color);
-      border-radius: 12px;
-      padding: 20px;
-      backdrop-filter: blur(var(--blur));
-      box-shadow: var(--shadow);
-      transition: transform var(--transition), box-shadow var(--transition);
-      animation: fadeInUp 0.8s var(--transition) both;
-    }
-    
-    @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    
-    .comment:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-    }
-    
-    /* Formulario de comentarios */
-    form#commentForm {
-      width: 100%;
-      max-width: 600px;
-      margin: 0 auto 40px;
-      background: var(--glass-bg);
-      padding: 30px;
-      border-radius: 16px;
-      backdrop-filter: blur(var(--blur));
-      box-shadow: var(--shadow);
-      transition: box-shadow var(--transition);
-      animation: fadeInUp 0.8s var(--transition) both;
-    }
-    
-    form#commentForm:hover {
-      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
-    }
-    
-    form#commentForm input,
-    form#commentForm textarea {
-      width: 100%;
-      padding: 14px;
-      margin-bottom: 20px;
-      border: 1px solid var(--border-color);
-      border-radius: 8px;
-      font-size: 16px;
-      background: rgba(255, 255, 255, 0.5);
-      color: var(--text-color);
-      transition: background var(--transition), border-color var(--transition);
-    }
-    
-    form#commentForm input:focus,
-    form#commentForm textarea:focus {
-      background: rgba(255, 255, 255, 0.7);
-      border-color: var(--primary-color);
-      outline: none;
-    }
-    
-    form#commentForm textarea {
-      resize: vertical;
-      min-height: 120px;
-    }
-    
-    form#commentForm button {
-      width: 100%;
-      padding: 14px;
-      background: var(--primary-color);
-      border: none;
-      border-radius: 8px;
-      font-size: 18px;
-      font-weight: 600;
-      color: #fff;
-      cursor: pointer;
-      transition: background var(--transition), transform var(--transition);
-    }
-    
-    form#commentForm button:hover {
-      background: var(--primary-dark);
-      transform: translateY(-2px);
-    }
-    
-    /* Responsive */
-    @media (max-width: 768px) {
-      body {
-        padding: 20px;
-      }
-      
-      h1 {
-        font-size: 1.8em;
-      }
-      
-      h2 {
-        font-size: 1.6em;
-      }
-      
-      form#commentForm input,
-      form#commentForm textarea,
-      form#commentForm button {
-        font-size: 16px;
-      }
-    }
-    </style>
+  </style>
 </head>
 <body>
   <h1>Demo API CRUD de Comentarios</h1>
