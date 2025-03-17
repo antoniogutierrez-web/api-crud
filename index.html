@@ -3,226 +3,236 @@
 <head>
   <meta charset="UTF-8">
   <title>Demo API CRUD de Comentarios</title>
-  <style>
-    /* Aquí t@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
+  <style>@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
 
-:root {
-  --primary-color: #4e9af1;
-  --secondary-color: #1e3c72;
-  --accent-color: #f7c331;
-  --glass-bg: rgba(255, 255, 255, 0.3);
-  --border-glass: rgba(255, 255, 255, 0.2);
-  --shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-}
-
-/* Reset básico */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-html {
-  scroll-behavior: smooth;
-}
-
-body {
-  font-family: 'Inter', sans-serif;
-  /* Fondo degradado animado */
-  background: linear-gradient(135deg, #ece9e6, #ffffff);
-  min-height: 100vh;
-  color: #333;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 40px 20px;
-  position: relative;
-  overflow-x: hidden;
-}
-
-/* Capa de fondo animada */
-body::before {
-  content: '';
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 200%;
-  height: 200%;
-  background: linear-gradient(45deg, #a18cd1, #fbc2eb, #4e9af1, #1e3c72);
-  background-size: 400% 400%;
-  animation: gradientShift 20s ease infinite;
-  z-index: -2;
-}
-
-@keyframes gradientShift {
-  0% { transform: translateX(0) translateY(0); }
-  50% { transform: translateX(-25%) translateY(-25%); }
-  100% { transform: translateX(0) translateY(0); }
-}
-
-/* Capa semi-transparente con desenfoque para suavizar el fondo */
-body::after {
-  content: '';
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(255, 255, 255, 0.6);
-  z-index: -1;
-  backdrop-filter: blur(8px);
-}
-
-/* Contenedor global */
-.container {
-  max-width: 1200px;
-  width: 100%;
-  margin: 0 auto;
-  padding: 20px;
-}
-
-/* Encabezados */
-h1, h2 {
-  text-align: center;
-  font-weight: 700;
-  margin-bottom: 20px;
-  color: var(--secondary-color);
-  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
-}
-
-/* Sección de comentarios */
-#comments {
-  width: 100%;
-  max-width: 800px;
-  margin: 20px auto 40px;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-/* Tarjetas de comentarios con efecto glass */
-.comment {
-  background: var(--glass-bg);
-  border: 1px solid var(--border-glass);
-  border-radius: 15px;
-  padding: 20px;
-  box-shadow: var(--shadow);
-  backdrop-filter: blur(10px);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.comment:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
-}
-
-.comment strong {
-  font-size: 1.2em;
-  color: var(--secondary-color);
-}
-
-.comment em {
-  font-size: 0.9em;
-  color: #777;
-}
-
-/* Formulario con estilo avanzado y efecto glass */
-form {
-  width: 100%;
-  max-width: 600px;
-  margin: 0 auto 40px;
-  background: var(--glass-bg);
-  padding: 30px;
-  border-radius: 15px;
-  box-shadow: var(--shadow);
-  backdrop-filter: blur(10px);
-  transition: box-shadow 0.3s ease;
-}
-
-form:hover {
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
-}
-
-form input,
-form textarea {
-  width: 100%;
-  padding: 15px;
-  margin-bottom: 20px;
-  border: 1px solid var(--border-glass);
-  border-radius: 8px;
-  font-size: 16px;
-  background: rgba(255, 255, 255, 0.5);
-  transition: border 0.3s ease, background 0.3s ease;
-}
-
-form input:focus,
-form textarea:focus {
-  border-color: var(--primary-color);
-  background: rgba(255, 255, 255, 0.7);
-  outline: none;
-}
-
-form textarea {
-  resize: vertical;
-  min-height: 120px;
-}
-
-form button {
-  width: 100%;
-  padding: 15px;
-  background: var(--primary-color);
-  color: #fff;
-  border: none;
-  border-radius: 8px;
-  font-size: 18px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.3s ease, transform 0.3s ease;
-}
-
-form button:hover {
-  background: var(--secondary-color);
-  transform: translateY(-3px);
-}
-
-/* Enlaces (opcional) */
-a {
-  color: var(--primary-color);
-  text-decoration: none;
-  transition: color 0.3s ease;
-}
-
-a:hover {
-  color: var(--secondary-color);
-}
-
-/* Ajustes responsivos */
-@media (max-width: 768px) {
-  body {
-    padding: 20px 10px;
-  }
-  
-  h1 {
-    font-size: 1.8em;
-  }
-  
-  h2 {
-    font-size: 1.5em;
-  }
-  
-  form input, form textarea, form button {
-    font-size: 16px;
-  }
-}
-us estilos CSS */
-    body { font-family: Arial, sans-serif; margin: 20px; }
-    .comment { border: 1px solid #ccc; padding: 10px; margin-bottom: 10px; background: #f9f9f9; }
-  </style>
+    :root {
+      --primary-color: #8b626c;        /* Magenta vibrante */
+      --primary-dark: #611608;         /* Naranja/magenta oscuro */
+      --secondary-color: #00c6ff;      /* Cyan brillante */
+      --accent-color: #f7c331;         /* Amarillo vibrante */
+      --glass-bg: rgba(255, 255, 255, 0.25);
+      --border-color: rgba(255, 255, 255, 0.35);
+      --shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      --blur: 10px;
+      --transition: 0.4s ease;
+      --text-color: #fff;
+      --background: linear-gradient(135deg, #ff416c, #ff4b2b, #00c6ff, #0072ff, #a800ff);
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    html {
+      scroll-behavior: smooth;
+    }
+    
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: var(--background);
+      background-size: 400% 400%;
+      animation: bgAnimation 20s ease infinite;
+      min-height: 100vh;
+      color: var(--text-color);
+      padding: 40px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    @keyframes bgAnimation {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    
+    /* Abstract Shapes */
+    body::before {
+      content: '';
+      position: absolute;
+      top: -10%;
+      left: -10%;
+      width: 120%;
+      height: 120%;
+      background: radial-gradient(circle, rgba(255,255,255,0.15), transparent 70%);
+      animation: floatShape 15s ease-in-out infinite;
+      z-index: -2;
+    }
+    
+    @keyframes floatShape {
+      0%, 100% { transform: translate(0, 0) rotate(0deg); }
+      50% { transform: translate(20px, -20px) rotate(180deg); }
+    }
+    
+    body::after {
+      content: '';
+      position: absolute;
+      bottom: -10%;
+      right: -10%;
+      width: 120%;
+      height: 120%;
+      background: radial-gradient(circle, rgba(0,198,255,0.15), transparent 70%);
+      animation: floatShape 20s ease-in-out infinite reverse;
+      z-index: -2;
+    }
+    
+    /* Headings */
+    h1, h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      font-weight: 600;
+      color: var(--primary-color);
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+      animation: fadeInDown var(--transition) both;
+    }
+    
+    @keyframes fadeInDown {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    /* Botón de eliminar TODOS los comentarios */
+    #deleteAllBtn {
+      background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
+      color: var(--text-color);
+      padding: 14px 28px;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 30px;
+      transition: transform var(--transition), box-shadow var(--transition);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+    
+    #deleteAllBtn:hover {
+      transform: scale(1.07);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+    }
+    
+    /* Contenedor de comentarios */
+    #comments {
+      width: 100%;
+      max-width: 900px;
+      margin-bottom: 40px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    
+    /* Tarjetas de comentario */
+    .comment {
+      background: var(--glass-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 20px;
+      backdrop-filter: blur(var(--blur));
+      box-shadow: var(--shadow);
+      transition: transform var(--transition), box-shadow var(--transition);
+      animation: fadeInUp 0.8s var(--transition) both;
+    }
+    
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .comment:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    }
+    
+    /* Formulario de comentarios */
+    form#commentForm {
+      width: 100%;
+      max-width: 600px;
+      margin: 0 auto 40px;
+      background: var(--glass-bg);
+      padding: 30px;
+      border-radius: 16px;
+      backdrop-filter: blur(var(--blur));
+      box-shadow: var(--shadow);
+      transition: box-shadow var(--transition);
+      animation: fadeInUp 0.8s var(--transition) both;
+    }
+    
+    form#commentForm:hover {
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    }
+    
+    form#commentForm input,
+    form#commentForm textarea {
+      width: 100%;
+      padding: 14px;
+      margin-bottom: 20px;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      font-size: 16px;
+      background: rgba(255, 255, 255, 0.5);
+      color: var(--text-color);
+      transition: background var(--transition), border-color var(--transition);
+    }
+    
+    form#commentForm input:focus,
+    form#commentForm textarea:focus {
+      background: rgba(255, 255, 255, 0.7);
+      border-color: var(--primary-color);
+      outline: none;
+    }
+    
+    form#commentForm textarea {
+      resize: vertical;
+      min-height: 120px;
+    }
+    
+    form#commentForm button {
+      width: 100%;
+      padding: 14px;
+      background: var(--primary-color);
+      border: none;
+      border-radius: 8px;
+      font-size: 18px;
+      font-weight: 600;
+      color: #fff;
+      cursor: pointer;
+      transition: background var(--transition), transform var(--transition);
+    }
+    
+    form#commentForm button:hover {
+      background: var(--primary-dark);
+      transform: translateY(-2px);
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      body {
+        padding: 20px;
+      }
+      
+      h1 {
+        font-size: 1.8em;
+      }
+      
+      h2 {
+        font-size: 1.6em;
+      }
+      
+      form#commentForm input,
+      form#commentForm textarea,
+      form#commentForm button {
+        font-size: 16px;
+      }
+    }
+    </style>
 </head>
 <body>
   <h1>Demo API CRUD de Comentarios</h1>
-  <button id="deleteAllBtn" style="background: red; color: #fff; padding: 10px; border: none; border-radius: 4px; cursor: pointer;">
+  <button id="deleteAllBtn" style="background: rgb(110, 58, 58); color: #fff; padding: 10px; border: none; border-radius: 4px; cursor: pointer;">
     Eliminar TODOS los comentarios
   </button>
   
@@ -239,6 +249,9 @@ us estilos CSS */
   </form>
 
   <script>
+    // Cargar comentarios al iniciar
+fetchComments();
+
     // Define la URL de tu API en Render para comentarios
     const API_URL = "https://api-crud-gbuq.onrender.com/api/comments";
 
@@ -302,6 +315,48 @@ document.getElementById("deleteAllBtn").addEventListener("click", deleteAllComme
         alert("Hubo un error al enviar el comentario.");
       }
     });
+    // Función para obtener y mostrar los comentarios
+async function fetchComments(showAll = false) {
+  try {
+    const res = await fetch(API_URL);
+    const comments = await res.json();
+    const commentsDiv = document.getElementById("comments");
+    commentsDiv.innerHTML = "";
+    
+    const initialDisplayCount = 3; // Cantidad de comentarios a mostrar inicialmente
+    const commentsToShow = showAll ? comments : comments.slice(0, initialDisplayCount);
+
+    commentsToShow.forEach((comment, index) => {
+      const div = document.createElement("div");
+      div.className = "comment";
+      // Agregamos un retraso para el efecto fade (cada comentario aparece un poco después del anterior)
+      div.style.opacity = "0";
+      setTimeout(() => {
+        div.style.opacity = "1";
+      }, index * 200); // 200ms de retraso entre cada comentario
+      div.innerHTML = `
+        <strong>${comment.name}</strong> (${comment.email})<br>
+        ${comment.text}<br>
+        <em>${new Date(comment.date).toLocaleString()}</em>
+      `;
+      commentsDiv.appendChild(div);
+    });
+
+    // Si no se están mostrando todos los comentarios y hay más de los iniciales, mostrar un botón "Ver más comentarios"
+    if (!showAll && comments.length > initialDisplayCount) {
+      const btn = document.createElement("button");
+      btn.textContent = "Ver más comentarios";
+      btn.style.marginTop = "10px";
+      btn.addEventListener("click", () => {
+        fetchComments(true);
+      });
+      commentsDiv.appendChild(btn);
+    }
+  } catch (error) {
+    console.error("Error al obtener comentarios:", error);
+  }
+}
+
 
     // Cargar comentarios al iniciar
     fetchComments();
