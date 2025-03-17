@@ -41,7 +41,7 @@
       flex-direction: column;
       align-items: center;
       position: relative;
-      overflow: hidden;
+      overflow: auto;
     }
     
     @keyframes bgAnimation {
@@ -323,7 +323,7 @@ async function fetchComments(showAll = false) {
     const commentsDiv = document.getElementById("comments");
     commentsDiv.innerHTML = "";
     
-    const initialDisplayCount = 3; // Cantidad de comentarios a mostrar inicialmente
+    const initialDisplayCount = 2; // Cantidad de comentarios a mostrar inicialmente
     const commentsToShow = showAll ? comments : comments.slice(0, initialDisplayCount);
 
     commentsToShow.forEach((comment, index) => {
